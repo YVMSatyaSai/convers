@@ -1,9 +1,17 @@
 import { VideoTrack } from "@livekit/components-react";
 import ParticipantInfo from "./ParticipantInfo";
 
+import { Track } from "livekit-client";
+
 export default function CustomParticipantTile({ trackRef }) {
   const participant = trackRef.participant;
   const isSpeaking = participant.isSpeaking;
+
+  const cameraPublication = participant.getTrackPublication(Track.Source.Camera);
+
+const cameraEnabled =
+  cameraPublication &&
+  !cameraPublication.isMuted;
 
   function getAvatarColor(name) {
     const colors = [
@@ -38,7 +46,7 @@ export default function CustomParticipantTile({ trackRef }) {
     transition: "border .2s",
   }}
 >
-      {trackRef.publication ? (
+      {cameraEnabled ? (
         <VideoTrack
           trackRef={trackRef}
           style={{
