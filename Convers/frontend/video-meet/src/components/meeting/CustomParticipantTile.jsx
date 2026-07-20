@@ -27,18 +27,17 @@ export default function CustomParticipantTile({ trackRef }) {
 
   return (
     <div
-      style={{
-        width: "100%",
-        height: "100%",
-        maxWidth: "100%",
-        background: "#000",
-        borderRadius: "16px",
-        overflow: "hidden",
-        position: "relative",
-        border: isSpeaking ? "4px solid #34A853" : "2px solid #3c4043",
-        transition: "border 0.2s ease",
-      }}
-    >
+  style={{
+    width: "100%",
+    height: "100%",
+    background: "#000",
+    borderRadius: "16px",
+    overflow: "hidden",
+    position: "relative",
+    border: isSpeaking ? "4px solid #34A853" : "2px solid #3c4043",
+    transition: "border .2s",
+  }}
+>
       {trackRef.publication ? (
         <VideoTrack
           trackRef={trackRef}
