@@ -13,7 +13,7 @@ export default function ParticipantGrid() {
   ]);
 
   return (
-    <MeetingGrid participantCount={trackRefs.length}>
+    <MeetingGrid participants={trackRefs}>
       {trackRefs.map((trackRef) => (
         <CustomParticipantTile
           key={trackRef.participant.identity}

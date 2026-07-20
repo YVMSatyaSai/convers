@@ -2,16 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { calculateLayout } from "../../utils/layoutEngine";
 
 export default function MeetingGrid({
-  participantCount,
+  participants,
   children,
 }) {
   const containerRef = useRef(null);
 
   const [layout, setLayout] = useState({
-    rows: 1,
-    columns: 1,
     tileWidth: 0,
     tileHeight: 0,
+    rows: [],
   });
 
   useEffect(() => {
@@ -21,23 +20,19 @@ export default function MeetingGrid({
       const width = containerRef.current.clientWidth;
       const height = containerRef.current.clientHeight;
 
-      setLayout(
-        calculateLayout(
-          width,
-          height,
-          participantCount
-        )
-      );
+      setLayout(calculateLayout(width, height, participants));
     }
 
     updateLayout();
 
     window.addEventListener("resize", updateLayout);
 
-    return () => {
-      window.removeEventListener("resize", updateLayout);
-    };
-  }, [participantCount]);
+    return () => window.removeEventListener("resize", updateLayout);
+  }, [participants]);
+
+  const childArray = Array.isArray(children) ? children : [children];
+
+  let index = 0;
 
   return (
     <div
@@ -45,24 +40,41 @@ export default function MeetingGrid({
       style={{
         width: "100%",
         height: "calc(100vh - 170px)",
-        padding: "20px",
+        padding: 20,
         boxSizing: "border-box",
-
-        display: "grid",
-
-        gridTemplateColumns: `repeat(${layout.columns}, ${layout.tileWidth}px)`,
-
-        gridAutoRows: `${layout.tileHeight}px`,
-
+        display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
-        alignContent: "center",
-
-        gap: "16px",
-
-        overflow: "hidden",
+        gap: 16,
       }}
     >
-      {children}
+      {layout.rows.map((row, rowIndex) => (
+        <div
+          key={rowIndex}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 16,
+          }}
+        >
+          {row.map(() => {
+            const child = childArray[index++];
+
+            return (
+              <div
+                key={index}
+                style={{
+                  width: layout.tileWidth,
+                  height: layout.tileHeight,
+                  flexShrink: 0,
+                }}
+              >
+                {child}
+              </div>
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
 }
